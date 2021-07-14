@@ -20,18 +20,20 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RequestMapping("/design")
-@SessionAttributes("orders")
+@SessionAttributes("order")
 @Controller
 public class DesignTacoController {
 
     private final IngredientRepository ingredientRepo;
     private TacoRepository tacoRepo;
 
+    // 존재 이유 다시 알아보기!!
     @ModelAttribute(name = "order")
     public Order order() {
         return new Order();
     }
 
+    // 존재 이유 다시 알아보기!!
     @ModelAttribute(name = "taco")
     public Taco taco() {
         return new Taco();
@@ -70,10 +72,10 @@ public class DesignTacoController {
         if (errors.hasErrors()) {
             return "design";
         }
+
         Taco saved = tacoRepo.save(design);
         order.addDesign(saved);
 
-        log.info("Processing design: " + design);
         return "redirect:/orders/current";
     }
 

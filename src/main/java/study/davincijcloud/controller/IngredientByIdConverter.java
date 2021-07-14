@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import study.davincijcloud.data.IngredientRepository;
 import study.davincijcloud.domain.Ingredient;
 
+import java.util.Optional;
+
 @Component
 public class IngredientByIdConverter implements Converter<String, Ingredient> {
 
@@ -18,6 +20,7 @@ public class IngredientByIdConverter implements Converter<String, Ingredient> {
 
     @Override
     public Ingredient convert(String id) {
-        return ingredientRepo.findById(id);
+        Optional<Ingredient> optionalIngredient = ingredientRepo.findById(id);
+        return optionalIngredient.orElse(null);
     }
 }
