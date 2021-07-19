@@ -1,12 +1,18 @@
 package study.davincijcloud.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+import javax.sql.DataSource;
+
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    DataSource dataSource;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -20,6 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        /* --인메모리 사용자 스토어--
         auth.inMemoryAuthentication()
                 .withUser("user1")
                 .password("{noop}password1")
@@ -28,5 +35,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .withUser("user2")
                 .password("{noop}password2")
                 .authorities("ROLE_USER");
+         */
+
+        /* JDBC 기반의 사용자 스토어 */
+        auth.jdbcAuthentication()
+                .dataSource(dataSource)
+                .usersByUsernameQuery(
+                        "select username, password, enabled from users " +
+                                "where username=?"
+                )
+                .authoritiesByUsernameQuery(
+                        "select username, authority from authorities " +
+                                "where username=?"
+                );
     }
 }
