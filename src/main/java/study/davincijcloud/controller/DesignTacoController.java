@@ -8,11 +8,14 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import study.davincijcloud.data.IngredientRepository;
 import study.davincijcloud.data.TacoRepository;
+import study.davincijcloud.data.UserRepository;
 import study.davincijcloud.domain.Ingredient;
 import study.davincijcloud.domain.Order;
 import study.davincijcloud.domain.Taco;
+import study.davincijcloud.domain.User;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +29,7 @@ public class DesignTacoController {
 
     private final IngredientRepository ingredientRepo;
     private TacoRepository tacoRepo;
+    private UserRepository userRepository;
 
     // 존재 이유 다시 알아보기!!
     @ModelAttribute(name = "order")
@@ -40,13 +44,14 @@ public class DesignTacoController {
     }
 
     @Autowired
-    public DesignTacoController(IngredientRepository ingredientRepo, TacoRepository tacoRepo) {
+    public DesignTacoController(IngredientRepository ingredientRepo, TacoRepository tacoRepo, UserRepository userRepository) {
         this.ingredientRepo = ingredientRepo;
         this.tacoRepo = tacoRepo;
+        this.userRepository = userRepository;
     }
 
     @GetMapping
-    public String showDesignForm(Model model) {
+    public String showDesignForm(Model model, Principal principal) {
         List<Ingredient> ingredients = new ArrayList<>();
         ingredientRepo.findAll().forEach(i -> ingredients.add(i));
 
@@ -55,7 +60,9 @@ public class DesignTacoController {
             model.addAttribute(type.toString().toLowerCase(), filterByType(ingredients, type));
         }
 
-        model.addAttribute("taco", new Taco());
+        String username = principal.getName();
+        User user = userRepository.findByUsername(username);
+        model.addAttribute("user", user);
 
         return "design";
     }
