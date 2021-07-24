@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
 public class DesignTacoController {
 
     private final IngredientRepository ingredientRepo;
-    private TacoRepository tacoRepo;
-    private UserRepository userRepository;
+    private final TacoRepository tacoRepo;
+    private final UserRepository userRepository;
 
     // 존재 이유 다시 알아보기!!
     @ModelAttribute(name = "order")

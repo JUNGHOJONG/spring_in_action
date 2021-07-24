@@ -2,14 +2,15 @@ package study.davincijcloud.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import study.davincijcloud.data.UserDetailsService;
+import study.davincijcloud.data.CustomUserDetailsService;
 import study.davincijcloud.data.UserRepository;
 import study.davincijcloud.domain.User;
 
 @Service
-public class UserRepositoryUserDetailsService implements UserDetailsService {
+public class UserRepositoryUserDetailsService implements CustomUserDetailsService {
 
     private final UserRepository userRepository;
 
