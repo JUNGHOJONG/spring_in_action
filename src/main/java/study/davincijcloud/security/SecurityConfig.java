@@ -40,7 +40,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutSuccessUrl("/")
                 .and()
-                .csrf();
+                .csrf()
+                .ignoringAntMatchers("/h2-console/**")
+                .disable();
     }
 
     @Override
