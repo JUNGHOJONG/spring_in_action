@@ -1,9 +1,10 @@
 package study.davincijcloud.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -14,18 +15,24 @@ import study.davincijcloud.domain.Order;
 import study.davincijcloud.domain.User;
 
 import javax.validation.Valid;
-import java.security.Principal;
 
+@ConfigurationProperties(prefix = "taco.orders")
 @Slf4j
 @RequestMapping("/orders")
 @SessionAttributes("order")
 @Controller
 public class OrderController {
 
+    private int pageSize = 20;
+
     private final OrderRepository orderRepo;
 
     public OrderController(OrderRepository orderRepo) {
         this.orderRepo = orderRepo;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 
     @GetMapping("/current")
@@ -60,5 +67,14 @@ public class OrderController {
         sessionStatus.setComplete();
 
         return "redirect:/";
+    }
+
+    @GetMapping
+    public String ordersForUser(@AuthenticationPrincipal User user, Model model) {
+        Pageable pageable = PageRequest.of(0, pageSize);
+
+        model.addAttribute("orders", orderRepo.findByUserOrderByPlacedAtDesc(user, pageable));
+
+        return "orderList";
     }
 }
