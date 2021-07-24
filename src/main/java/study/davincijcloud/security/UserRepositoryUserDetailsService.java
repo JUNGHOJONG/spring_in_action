@@ -5,12 +5,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import study.davincijcloud.data.CustomUserDetailsService;
 import study.davincijcloud.data.UserRepository;
 import study.davincijcloud.domain.User;
 
 @Service
-public class UserRepositoryUserDetailsService implements CustomUserDetailsService {
+public class UserRepositoryUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
